@@ -28,19 +28,17 @@ class extra extends Model {
      * @param type $user_id
      * @param type $shift_id
      * @param type $extra_h
-     * @param type $extra_m
      * @param type $calc_hour
      * @param type $calc_min
      * @param type $leave_h
-     * @param type $leave_m
 
      * 
      * 
      */
 
-    protected static function extra($day, $user_id, $shift_id, $extra_h, $extra_m, $calc_hour, $calc_min, $leave_h, $leave_m) {
+    protected static function extra($day, $user_id, $shift_id, $extra_h, $calc_hour, $calc_min, $leave_h) {
 
-        $extra = new static(compact('day', 'user_id', 'shift_id', 'extra_h', 'extra_m', 'calc_hour', 'calc_min', 'leave_h', 'leave_m'));
+        $extra = new static(compact('day', 'user_id', 'shift_id', 'extra_h', 'calc_hour', 'calc_min', 'leave_h'));
 
         //do something
 

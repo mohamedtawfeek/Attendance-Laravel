@@ -75,7 +75,9 @@
                             <div class="username">@yield('name')</div>
 
                         </div>
+                        
                     </div>
+                    @yield('sidebar')
                     <!-- END MINI-PROFILE -->
 
                     <!-- BEGIN SIDEBAR MENU -->	

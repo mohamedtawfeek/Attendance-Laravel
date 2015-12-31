@@ -16,7 +16,13 @@ use attend\Http\Controllers\Auth\AuthController;
 Route::resource('/', 'homeController');
 Route::resource('/home', 'homeController');
 Route::post('/end', 'homeController@update');
-
+Route::post('/break', 'homeController@BreakTime');
+Route::get('/extra', 'extraController@index');
+Route::post('/extra', 'extraController@store');
+Route::post('/extraEnd', 'extraController@update');
+Route::get('/admin', 'adminController@index');
+Route::post('/change', 'adminController@update');
+Route::post('/changeExtra', 'adminController@ExtraUpdate');
 
 // Authentication routes...
 Route::get('login', 'Auth\AuthController@getLogin');

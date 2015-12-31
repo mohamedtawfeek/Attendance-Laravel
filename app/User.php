@@ -29,7 +29,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'email', 'password','shift_id'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -47,8 +47,8 @@ class User extends Model implements AuthenticatableContract,
      * @param type $password
      * @param type $role
      */
-    protected static function register($name , $email , $password , $role, $shift ){
-     $user = new static (compact('name', 'email', 'password', 'role' , 'shift'));
+    protected static function register($name , $email , $password , $role, $shift_id ){
+     $user = new static (compact('name', 'email', 'password', 'role' , 'shift_id'));
      
      //do something
      

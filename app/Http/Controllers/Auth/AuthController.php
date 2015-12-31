@@ -61,7 +61,7 @@ use AuthenticatesAndRegistersUsers,
                     'name' => $data['name'],
                     'email' => $data['email'],
                     'password' => bcrypt($data['password']),
-                    'shift' => $data['shift'],
+                    'shift_id' => $data['shift'],
         ]);
     }
 
