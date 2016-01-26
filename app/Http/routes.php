@@ -21,8 +21,20 @@ Route::get('/extra', 'extraController@index');
 Route::post('/extra', 'extraController@store');
 Route::post('/extraEnd', 'extraController@update');
 Route::get('/admin', 'adminController@index');
+Route::get('/single', 'SingleController@index');
+Route::post('/showSingle', 'SingleController@show');
+Route::get('/showSingle', 'SingleController@index');
+Route::post('/showArchive', 'homeController@Archive');
+Route::get('/control', 'adminController@usersShow');
+Route::post('/control', 'adminController@userChange');
+Route::post('/userDelete', 'adminController@destroyUser');
+Route::post('/hoursDelete', 'adminController@destroyHours');
+Route::post('/hoursChange', 'adminController@hoursChange');
+
 Route::post('/change', 'adminController@update');
 Route::post('/changeExtra', 'adminController@ExtraUpdate');
+Route::post('/delete', 'adminController@destroy');
+Route::post('/deleteExtra', 'adminController@destroyExtra');
 
 // Authentication routes...
 Route::get('login', 'Auth\AuthController@getLogin');
@@ -39,6 +51,7 @@ Route::post('register',[
  'middleware' => 'auth',
  'uses' => 'Auth\AuthController@postRegister'
 ]);
+
 
 Route::controllers([
     'password' => 'Auth\PasswordController',

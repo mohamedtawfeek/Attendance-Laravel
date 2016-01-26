@@ -4,6 +4,8 @@ namespace attend\Http\Controllers;
 
 use DB;
 use Auth;
+use Hash;
+use Validator;
 use Illuminate\Http\Request;
 use attend\Http\Requests;
 use attend\Http\Controllers\Controller;
@@ -19,59 +21,133 @@ class adminController extends Controller {
         $users = DB::table('users')
                 ->select('id', 'name')
                 ->get();
+        $month = date('Y-m');
+        $month2 = date('m-Y');
         foreach ($users as $user) {
             $attendance = DB::table('attend')
                     ->select()
                     ->where('user_id', $user->id)
+                    ->where('attend_date', 'like', $month . '%')
                     ->get();
-            $attend[$user->name] = $attendance;
+            $workHours = 0;
+            $workMins = 0;
+            $minsCalc = 0;
+            $lateHour = 0;
+            $lateMin = 0;
+            $lateMins = 0;
+            foreach ($attendance as $workTime) {
+                $workHours += $workTime->calc_hour;
+                $workMins += $workTime->calc_min;
+                $lateSplit = explode(':', $workTime->late_h);
+                $lateH = $lateSplit[0];
+                $lateM = $lateSplit[1];
+                $lateHour += $lateH;
+                $lateMin += $lateM;
+                if ($lateMin > 60) {
+                    $lateMins = $lateMin - 60;
+                    $lateHour++;
+                } else {
+                    $lateMins = $lateMin;
+                }
+                if ($workMins > 60) {
+                    $minsCalc = $workMins - 60;
+                    $workHours++;
+                } else {
+                    $minsCalc = $workMins;
+                }
+            }
+            $attend[$user->name . '  work: ' . $workHours . ':' . $minsCalc . ' - Late: ' . $lateHour . ':' . $lateMins] = $attendance;
+
             $extraTime = DB::table('extra')
                     ->select()
                     ->where('user_id', $user->id)
+                    ->where('extra_date', 'like', '%' . $month2)
                     ->get();
-            $extra[$user->name] = $extraTime;
+            $extraHours = 0;
+            $extraMins = 0;
+            $minsExtra = 0;
+            foreach ($extraTime as $extraCalc) {
+                if ($extraCalc->status === 'accepted') {
+                    $extraHours += $extraCalc->calc_hour;
+                    $extraMins += $extraCalc->calc_min;
+                    if ($extraMins > 60) {
+                        $minsExtra = $workMins - 60;
+                        $extraHours++;
+                    } else {
+                        $minsExtra = $workMins;
+                    }
+                }
+            }
+
+            $extra[$user->name . ' - Time: ' . $extraHours . ':' . $minsExtra] = $extraTime;
         }
 
-        return view('auth.admin', compact('attend', 'extra'));
+        return view('auth.admin', compact('attend', 'extra','users'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for controlling users.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
-        //
+    public function usersShow() {
+        $users = DB::table('users')
+                ->select()
+                ->get();
+        $shifts = DB::table('hours')
+                ->select()
+                ->get();
+        return view('auth.control', compact('users', 'shifts'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show the form for controlling users.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        //
+    public function userChange(Request $request) {
+        if ($request->isMethod('post')) { {
+                $validator = Validator::make($request->all(), [
+                            'name' => 'required|max:255',
+                            'email' => 'required|email|max:255',
+                            'password' => 'required|min:6',
+                            'shift' => 'required',
+                ]);
+            }
+            if ($validator->fails()) {
+                return redirect('control')
+                                ->withErrors($validator)
+                                ->withInput();
+            }
+            if (Hash::needsRehash($request->password)) {
+                $password = Hash::make($request->password);
+            } else {
+                $password = $request->password;
+            }
+            $update = DB::table('users')
+                    ->where('id', $request->id)
+                    ->update(['name' => $request->name, 'shift_id' => $request->shift, 'role' => $request->role, 'email' => $request->email, 'password' => $password]);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id) {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id) {
-        //
+    public function hoursChange(Request $request) {
+        if ($request->isMethod('post')) { {
+                $validator = Validator::make($request->all(), [
+                            'first' => 'required|max:2',
+                            'firstEnd' => 'required|max:2',
+                            'second' => 'required|max:2',
+                            'secondEnd' => 'required|max:2',
+                ]);
+            }
+            if ($validator->fails()) {
+                return redirect('control')
+                                ->withErrors($validator)
+                                ->withInput();
+            }
+            $update = DB::table('hours')
+                    ->where('id', $request->id)
+                    ->update(['first_start' => $request->first, 'first_end' => $request->firstEnd, 'second_start' => $request->second, 'second_end' => $request->secondEnd]);
+        }
     }
 
     /**
@@ -83,6 +159,11 @@ class adminController extends Controller {
      */
     public function update(Request $request) {
         if ($request->isMethod('post')) {
+            $ShiftHours = DB::table('hours')
+                    ->select()
+                    ->where('id', Auth::User()->shift_id)
+                    ->get();
+            $ShiftEnd = $ShiftHours[0];
             $leave_time = $request->leave;
             $leaveSplit = explode(':', $leave_time);
             $leaveH = $leaveSplit[0];
@@ -95,27 +176,34 @@ class adminController extends Controller {
             $breakSplit = explode(':', $breakTime);
             $breakH = $breakSplit[0];
             $breakM = $breakSplit[1];
-            $calcH = $leaveH - $attendH - $breakH;
-            $Mcalc = $attendM - $breakM;
-            if ($leaveM > $Mcalc) {
-                $calcM = $leaveM - $Mcalc;
-            } else {
-                if ($Mcalc > 60) {
-                    $calcM1 = $Mcalc - 60;
-                    if ($calcM1 > $leaveM) {
-                        $calcM = $calcM1 - $leaveM;
-                    } else {
-                        $calcM = $leaveM - $calcM1;
-                    }
-                    $calcH --;
+
+            $calcH = $leaveH - $attendH - ($ShiftEnd->second_start - $ShiftEnd->first_end) - $breakH - 1;
+            $Mcalc = $attendM + $breakM;
+            if ($Mcalc > 60) {
+                $newCalc = $Mcalc - 60;
+                $calcH--;
+                if ($newCalc > $leaveM) {
+                    $calcM = 60 - $newCalc - $leaveM;
                 } else {
-                    $calcM = $Mcalc - $leaveM;
+                    $calcM = 60 - $leaveM - $newCalc;
                 }
+            } elseif ($Mcalc > $leaveM) {
+                $calcM = 60 - $Mcalc - $leaveM;
+            } elseif ($Mcalc <= 0) {
+                $calcM = 60 - $leaveM - $Mcalc;
+            } else {
+                $calcM = 60 - $leaveM - $Mcalc;
             }
-            $response = array('id' => $request->id, 'attend' => $attend, 'leave' => $leave_time, 'workTime' => $calcH . ':' . $calcM, 'break' => $breakTime);
+            if ($calcM >= 60) {
+                $calcH++;
+                $calcMin = $calcM - 60;
+            } else {
+                $calcMin = $calcM;
+            }
+            $response = array('id' => $request->id, 'attend' => $attend, 'leave' => $leave_time, 'workTime' => $calcH . ':' . $calcMin, 'break' => $breakTime);
             $update = DB::table('attend')
                     ->where('id', $request->id)
-                    ->update(['attend_h' => $attend, 'leave_h' => $leave_time, 'calc_hour' => $calcH, 'calc_min' => $calcM, 'break_h' => $breakTime]);
+                    ->update(['attend_h' => $attend, 'leave_h' => $leave_time, 'calc_hour' => $calcH, 'calc_min' => $calcMin, 'break_h' => $breakTime]);
             return response()->json(['response' => $response]);
         }
     }
@@ -143,29 +231,81 @@ class adminController extends Controller {
                 $calcM = $leaveM - $Mcalc;
             } else {
                 if ($Mcalc > 60) {
-                    $calcM = $Mcalc - 60 - $leaveM;
+                    $calcM = $Mcalc - 60;
                     $calcH --;
+                    if ($leaveM > $Mcalc) {
+                        $calcM = 60 - $leaveM - $Mcalc;
+                    } else {
+                        $calcM = 60 - $Mcalc - $leaveM;
+                    }
                 } else {
-                    $calcM = $Mcalc - $leaveM;
+                    $calcM = 60 - $Mcalc - $leaveM;
                 }
             }
             $response = array('id' => $request->id, 'extra' => $extra, 'workTime' => $calcH . ':' . $calcM);
             $update = DB::table('extra')
                     ->where('id', $request->id)
-                    ->update(['extra_h' => $extra, 'status' =>$status, 'leave_h' => $leave_time, 'calc_hour' => $calcH, 'calc_min' => $calcM]);
+                    ->update(['extra_h' => $extra, 'status' => $status, 'leave_h' => $leave_time, 'calc_hour' => $calcH, 'calc_min' => $calcM]);
             return response()->json(['extra' => $response]);
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request) {
+        if ($request->isMethod('post')) {
+            $id = $request->id;
+            $attendance = DB::table('attend')
+                    ->select()
+                    ->where('id', $id)
+                    ->delete();
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        //
+    public function destroyExtra(Request $request) {
+        $id = $request->id;
+        $extra = DB::table('extra')
+                ->select()
+                ->where('id', $id)
+                ->delete();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyUser(Request $request) {
+        $id = $request->id;
+        $users = DB::table('users')
+                ->select()
+                ->where('id', $id)
+                ->delete();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyHours(Request $request) {
+        $id = $request->id;
+        $users = DB::table('hours')
+                ->select()
+                ->where('id', $id)
+                ->delete();
     }
 
 }

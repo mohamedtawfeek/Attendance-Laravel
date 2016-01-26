@@ -10,26 +10,25 @@
 <!-- END PLUGIN CSS -->
 @endsection
 @section('name', Auth::User()->name)
-@if(Auth::User()->role === "admin")
 @section('sidebar')
 <ul>
     <li class="start"> <a href="home" target="_blank"> <i class="icon-custom-home"></i> <span class="title">Home</span> <span class="selected"></span> </a> 
 
     </li>
     <li class="active"> <a href="javascript:;"> <i class="fa fa-folder-open"></i> <span class="title">Control</span> <span class="arrow "></span> </a>
-        <ul class="sub-menu ">
-            <li class="active"> <a href="javascript:;"> Admin </a> </li>
-            <li> <a href="single"> Single </a> </li>
-
-            <li > <a href="control"> users </a> </li>
+        <ul class="sub-menu">
+            <li> <a href="admin"> Admin </a> </li>
+            <li class="active"> <a href="javascript:;"> Single </a> </li>
+            <li> <a href="control"> users </a> </li>
 
         </ul>
     </li></ul>
-
 @endsection
+
 @section('content')
+@if(Auth::User()->role === "admin")
 <div class="row-fluid">
-        <div class="grid simple ">
+    <div class="grid simple ">
         <div class="grid-title">
             <h4><span class="semi-bold">Archive Attendance</span></h4>
             <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
@@ -78,18 +77,19 @@
             </form>
         </div>
     </div>
-    @foreach ($attend as $name => $user)
-
+    @if( $single === "attend"  )
     <div class="row">
         <div class="col-md-12">
             <div class="grid simple">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Attendance - {{ $name }}</span></h4>
+                    <h4><span class="semi-bold">Hours: </span>{{ $workHours }} <span class="semi-bold">: </span>{{ $minsCalc }}</h4>
+                    <h4><span class="semi-bold">Late Hours: </span>{{ $lateHour }} <span class="semi-bold">: </span>{{ $lateMins }}</h4>
 
-                    <div class="tools"> <a href="javascript:;" class="expand"></a> <a href="javascript:;" class="remove"></a> </div>
+                    <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
                 </div>
 
-                <div class="grid-body collapse">
+                <div class="grid-body">
                     <table class="table table-hover table-condensed nameit" >
                         <thead>
                             <tr class="gradeX"> 
@@ -109,7 +109,7 @@
                         <tbody>
 
 
-                            @foreach($user as $attendance)
+                            @foreach($attend as $attendance)
 
                             <tr class="gradeX">
                                 <td style="display: none">{{ csrf_token() }}</td>
@@ -133,19 +133,18 @@
                         </tbody>
                     </table>
                 </div></div></div></div>
-    @endforeach
-    @foreach ($extra as $name => $user)
-
+    @elseif($single === "extra")
     <div class="row">
         <div class="col-md-12">
             <div class="grid simple">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Extra - {{ $name }}</span></h4>
+                    <h4><span class="semi-bold">Hours: </span>{{ $extraHours }} <span class="semi-bold">: </span>{{ $minsExtra }}</h4>
 
-                    <div class="tools"> <a href="javascript:;" class="expand"></a> <a href="javascript:;" class="remove"></a> </div>
+                    <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
                 </div>
 
-                <div class="grid-body collapse">
+                <div class="grid-body">
                     <table class="table table-hover table-condensed nameit2" >
                         <thead>
                             <tr class="gradeX"> 
@@ -163,9 +162,7 @@
                             </tr>
                         </thead>
                         <tbody>
-
-
-                            @foreach($user as $extra)
+                            @foreach($extras as $extra)
 
                             <tr class="gradeX">
                                 <td style="display: none">@if($extra){{ csrf_token() }}@endif</td>
@@ -192,30 +189,31 @@
                         </tbody>
                     </table>
                 </div></div></div></div>
-    @endforeach
-    <div id="dialog" class="modal-block mfp-hide">
-        <section class="panel panel-info panel-color">
-            <header class="panel-heading">
-                <h2 class="panel-title">Are you sure?</h2>
-            </header>
-            <div class="panel-body">
-                <div class="modal-wrapper">
-                    <div class="modal-text">
-                        <p>Are you sure that you want to delete this row?</p>
-                    </div>
-                </div>
-
-                <div class="row m-t-20">
-                    <div class="col-md-12 text-right">
-                        <button id="dialogConfirm" class="btn btn-primary">Confirm</button>
-                        <button id="dialogCancel" class="btn btn-default">Cancel</button>
-                    </div>
+    @else
+    there's no data
+    @endif
+</div>
+<div id="dialog" class="modal-block mfp-hide">
+    <section class="panel panel-info panel-color">
+        <header class="panel-heading">
+            <h2 class="panel-title">Are you sure?</h2>
+        </header>
+        <div class="panel-body">
+            <div class="modal-wrapper">
+                <div class="modal-text">
+                    <p>Are you sure that you want to delete this row?</p>
                 </div>
             </div>
 
-        </section>
-    </div>
+            <div class="row m-t-20">
+                <div class="col-md-12 text-right">
+                    <button id="dialogConfirm" class="btn btn-primary">Confirm</button>
+                    <button id="dialogCancel" class="btn btn-default">Cancel</button>
+                </div>
+            </div>
+        </div>
 
+    </section>
 </div>
 @endif
 @endsection

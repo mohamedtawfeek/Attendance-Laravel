@@ -21,6 +21,7 @@ class Attend extends Migration {
             $table->integer('calc_hour');
             $table->integer('calc_min');
             $table->string('leave_h');
+            $table->string('late_h');
             $table->string('break_h');
         });
     }

@@ -53,9 +53,11 @@ class extraController extends Controller {
                 ]);
             }
         }
-
-   
-        $shift_end = '19';
+        $ShiftHours = DB::table('hours')
+                ->select()
+                ->where('id', Auth::User()->shift_id)
+                ->get();
+        $shift_end = $ShiftHours[0]->second_end + 1;
         $extraH = date('H');
 
         if ($extra_date && $shift_end < $extraH) {

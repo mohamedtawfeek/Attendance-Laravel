@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use attend\Http\Requests;
 use attend\Http\Controllers\Controller;
-
+use Hash;
 class loginController extends Controller
 {
     /**
@@ -16,6 +16,7 @@ class loginController extends Controller
      */
     public function index()
     {
+       
         return view('pages.login');
     }
 
