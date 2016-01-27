@@ -42,36 +42,57 @@
                     <label class="form-label">User</label>
                     <select name="id">
                         @foreach ($users as $user)
-                        <option value="{{ $user->id }}:{{ $user->name }}">{{ $user->name }}</option>
+                        @if($user->name === $name)
+                        <option value="{{ $user->id }}:{{ $user->name }}" selected="">{{ $user->name }}</option>
+                        @else
+                        <option value="{{ $user->id }}:{{ $user->name }}" >{{ $user->name }}</option>
+                        @endif
                         @endforeach
                     </select>
                 </div>
+               
                 <div class="form-group col-md-3">
                     <label class="form-label">Month</label> <select name="month">
-                        <option value="01">1</option>
-                        <option value="02">2</option>
-                        <option value="03">3</option>
-                        <option value="04">4</option>
-                        <option value="05">5</option>
-                        <option value="06">6</option>
-                        <option value="07">7</option>
-                        <option value="08">8</option>
-                        <option value="09">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
+                        @for($m = 1; $m <= 12; $m++)
+
+                        @if("0".$m === $month)
+                        <option value="0{{ $m }}" selected>{{ $m }}</option>
+                        @elseif($m < 10)
+                        <option value="0{{ $m }}" >{{ $m }}</option>
+                        @else
+                        <option value="{{ $m }}">{{ $m }}</option>
+                        @endif
+                        @endfor
                     </select></div> 
                 <div class="form-group col-md-3">
                     <label class="form-label">Year</label>
                     <select name="year">
+                        @if($year === "2016")
                         <option value="2016" selected="">2016</option>
                         <option value="2017">2017</option>
+                        @elseif($year === "2017")
+                        <option value="2016">2016</option>
+                        <option value="2017" selected="">2017</option>
+                        @else
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        @endif
                     </select></div>
                 <div class="form-group col-md-3">
                     <label class="form-label">Choose</label>
                     <select name="check">
+                        @if($attends === "attend")
                         <option value="attend" selected="">attend</option>
                         <option value="extra">extra</option>
+
+                        @elseif($attends === "extra")
+                        <option value="attend">attend</option>
+
+                        <option value="extra" selected="">extra</option>
+                        @else
+                        <option value="attend">attend</option>
+                        <option value="extra">extra</option>
+                        @endif
                     </select></div><br>
                 <button style="margin-top: 8px" type="submit" value="archive" name="archive" class="btn btn-primary btn-cons"><span class="bold">Select</span></button>
             </form>

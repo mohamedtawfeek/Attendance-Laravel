@@ -19,7 +19,11 @@ class SingleController extends Controller {
         $users = DB::table('users')
                 ->select('id', 'name')
                 ->get();
-        return view('auth.single', compact('users', 'single'));
+        $name = "";
+        $year = date('Y');
+        $month = date('m');
+        $attends = "";
+        return view('auth.single', compact('users', 'single','name','year','month','attends'));
     }
 
     /**
@@ -32,7 +36,7 @@ class SingleController extends Controller {
         $users = DB::table('users')
                 ->select('id', 'name')
                 ->get();
-
+        $attends = $request->check;
         $idSplit = explode(':', $request->id);
         $id = $idSplit[0];
         $name = $idSplit[1];
@@ -41,7 +45,7 @@ class SingleController extends Controller {
         } else {
             $month = $request->month;
         }
-        echo $month;
+        $year = $request->year;
         if ($request->check === "attend") {
             $attend = DB::table('attend')
                     ->select()
@@ -83,7 +87,7 @@ class SingleController extends Controller {
                 }
             }
 
-            return view('auth.single', compact('users', 'attend', 'single', 'name', 'workHours', 'minsCalc', 'lateHour', 'lateMins'));
+            return view('auth.single', compact('users', 'attend', 'single','year','month','attends', 'name', 'workHours', 'minsCalc', 'lateHour', 'lateMins'));
         } else {
             $extras = DB::table('extra')
                     ->select()
@@ -113,7 +117,7 @@ class SingleController extends Controller {
                 $single = "what";
             }
 
-            return view('auth.single', compact('users', 'extras', 'single', 'name','extraHours','minsExtra'));
+            return view('auth.single', compact('users', 'extras', 'single','year','month', 'name','extraHours','minsExtra','attends'));
         }
     }
 
