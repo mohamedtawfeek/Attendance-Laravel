@@ -53,34 +53,42 @@ class extraController extends Controller {
                 ]);
             }
         }
+
         $ShiftHours = DB::table('hours')
                 ->select()
                 ->where('id', Auth::User()->shift_id)
                 ->get();
         $shift_end = $ShiftHours[0]->second_end + 1;
         $extraH = date('H');
-
-        if ($extra_date && $shift_end < $extraH) {
-            $sameMsg = 'you cannot start extra more than one time';
-            $Alert = 'alert-danger';
-            $todayDate = date('Y-m-d');
-            $date = $extra_date->extra_date;
-            if ($todayDate === $date) {
-                return homeController::index($sameMsg, $Alert);
-            } else {
+        $day = date('l');
+        if ($day !== "Friday" && $day !== "Saturday") {
+            if ($extra_date && $shift_end < $extraH) {
+                $sameMsg = 'you cannot start extra more than one time';
+                $Alert = 'alert-danger';
+                $todayDate = date('Y-m-d');
+                $date = $extra_date->extra_date;
+                if ($todayDate === $date) {
+                    return homeController::index($sameMsg, $Alert);
+                } else {
+                    $success = 'alert-success';
+                    $doneMsg = 'Saved Successfully';
+                    extraCheck($request);
+                    return homeController::index($doneMsg, $success);
+                }
+            } elseif ($shift_end < $extraH) {
                 $success = 'alert-success';
                 $doneMsg = 'Saved Successfully';
                 extraCheck($request);
                 return homeController::index($doneMsg, $success);
+            } else {
+                $success = 'alert-danger';
+                $doneMsg = 'you cannot start extra at this time';
+                return homeController::index($doneMsg, $success);
             }
-        } elseif ($shift_end < $extraH) {
+        } else {
             $success = 'alert-success';
             $doneMsg = 'Saved Successfully';
             extraCheck($request);
-            return homeController::index($doneMsg, $success);
-        } else {
-            $success = 'alert-danger';
-            $doneMsg = 'you cannot start extra at this time';
             return homeController::index($doneMsg, $success);
         }
     }

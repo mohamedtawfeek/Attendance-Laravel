@@ -160,6 +160,7 @@
                                 <th style="width:7%" >Attend</th>
                                 <th style="width:6%">Work Time</th>
                                 <th style="width:6%">Break Time</th>
+                                 <th style="width:6%">Late</th>
                                 <th style="width:10%">leave</th>
                             </tr>
                         </thead>
@@ -170,6 +171,7 @@
                                 <td>{{ $attendance->attend_h }}</td>
                                 <td>{{ $attendance->calc_hour }}:{{ $attendance->calc_min }}</td>
                                 <td>{{ $attendance->break_h }}</td>
+                                <td>{{ $attendance->late_h }}</td>
                                 <td>{{ $attendance->leave_h }}</td>
                             </tr>
                             @endforeach

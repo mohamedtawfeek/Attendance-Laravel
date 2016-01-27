@@ -18,7 +18,7 @@ class homeController extends Controller {
      */
     public static function index($msg = 'welcome', $check = "alert-success") {
         if (Auth::check()) {
-            $month = date('Y-m'); 
+            $month = date('Y-m');
             $month2 = date('m-Y');
             $attend = DB::table('attend')
                     ->select()
@@ -57,7 +57,7 @@ class homeController extends Controller {
             $extra = DB::table('extra')
                     ->select()
                     ->where('user_id', Auth::User()->id)
-                    ->where('extra_date', 'like','%'. $month2 )
+                    ->where('extra_date', 'like', '%' . $month2)
                     ->orderBy('extra_date', 'desc')
                     ->get();
             $extraHours = 0;
@@ -78,12 +78,12 @@ class homeController extends Controller {
             }
             $message = $msg;
             $Class = $check;
-            return view('auth.home', compact('attend', 'message', 'Class', 'extra', 'workHours', 'minsCalc', 'extraHours', 'minsExtra','lateHour','lateMins'));
+            return view('auth.home', compact('attend', 'message', 'Class', 'extra', 'workHours', 'minsCalc', 'extraHours', 'minsExtra', 'lateHour', 'lateMins'));
         } else {
             return view('auth.login');
         }
     }
-    
+
     public static function Archive(Request $request) {
 
         if ($request->month < 10) {
@@ -91,7 +91,7 @@ class homeController extends Controller {
         } else {
             $month = $request->month;
         }
-     
+
         if ($request->check === "attend") {
             $attend = DB::table('attend')
                     ->select()
@@ -133,7 +133,7 @@ class homeController extends Controller {
                 }
             }
 
-            return view('auth.archive', compact( 'attend', 'single', 'workHours', 'minsCalc', 'lateHour', 'lateMins'));
+            return view('auth.archive', compact('attend', 'single', 'workHours', 'minsCalc', 'lateHour', 'lateMins'));
         } else {
             $extras = DB::table('extra')
                     ->select()
@@ -163,9 +163,10 @@ class homeController extends Controller {
                 $single = "what";
             }
 
-            return view('auth.archive', compact( 'extras', 'single','extraHours','minsExtra'));
+            return view('auth.archive', compact('extras', 'single', 'extraHours', 'minsExtra'));
         }
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -173,7 +174,7 @@ class homeController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-
+        $day = date('l');
         $attend_date = DB::table('attend')
                 ->select('attend_date')
                 ->where('user_id', Auth::User()->id)
@@ -192,7 +193,13 @@ class homeController extends Controller {
             $shift_id = Auth::User()->shift_id;
             $attendH = date('H');
             $attendM = date('i') - 5;
-
+            $lateH = date('H') - $ShiftHours->first_start;
+            if($attendH >= $ShiftHours->first_start && date('i') >= 5){
+              $lateM = $attendM;
+            }else{
+                $lateM = 0;
+            }
+            
             $attend_h = $attendH . ':' . $attendM;
             $calc_h = ($ShiftHours->second_end - $ShiftHours->first_start) + ($ShiftHours->second_start - $ShiftHours->first_end) - 1 - 1;
             $calcM = 60 - $attendM;
@@ -212,33 +219,39 @@ class homeController extends Controller {
             if ($start === 'start') {
                 $attend_db = DB::table('attend')->insert([
                     ['day' => $day, 'user_id' => Auth::User()->id, 'shift_id' => $shift_id, 'attend_date' => $todayDate, 'attend_h' => $attend_h, 'calc_hour'
-                        => $calc_h, 'calc_min' => $calc_m, 'leave_h' => $leave_h . ':00', 'break_h' => '1:00']
+                        => $calc_h, 'calc_min' => $calc_m, 'leave_h' => $leave_h . ':00', 'break_h' => '1:00','late_h' => $lateH.':'. $lateM]
                 ]);
             }
         }
 
-        if ($attend_date && $ShiftEnd->first_start < $attendH) {
-            $sameMsg = 'you cannot start shift more than one time';
-            $Alert = 'alert-danger';
-            $todayDate = date('Y-m-d');
-            $date = $attend_date->attend_date;
-            if ($todayDate === $date && $ShiftEnd->first_start >= $attendH) {
+        if ($day !== "Friday" && $day !== "Saturday") {
+            if ($attend_date && $ShiftEnd->first_start < $attendH) {
+                $sameMsg = 'you cannot start shift more than one time';
+                $Alert = 'alert-danger';
+                $todayDate = date('Y-m-d');
+                $date = $attend_date->attend_date;
+                if ($todayDate === $date && $ShiftEnd->first_start >= $attendH) {
+                    return homeController::index($sameMsg, $Alert);
+                } else {
+                    $success = 'alert-success';
+                    $doneMsg = 'Saved Successfuly';
+                    attendCheck($request, $ShiftEnd);
+                    return homeController::index($doneMsg, $success);
+                }
+            } elseif ($ShiftEnd->first_start > $attendH) {
+                $sameMsg = 'you cannot start shift at this time';
+                $Alert = 'alert-danger';
                 return homeController::index($sameMsg, $Alert);
             } else {
                 $success = 'alert-success';
-                $doneMsg = 'Saved Successfuly';
+                $doneMsg = 'Saved Successfully';
                 attendCheck($request, $ShiftEnd);
                 return homeController::index($doneMsg, $success);
             }
-        } elseif ($ShiftEnd->first_start > $attendH) {
-            $sameMsg = 'you cannot start shift at this time';
+        } else {
+            $sameMsg = 'today\'s day off start extra';
             $Alert = 'alert-danger';
             return homeController::index($sameMsg, $Alert);
-        } else {
-            $success = 'alert-success';
-            $doneMsg = 'Saved Successfully';
-            attendCheck($request, $ShiftEnd);
-            return homeController::index($doneMsg, $success);
         }
     }
 
