@@ -33,13 +33,13 @@
                     <div class="col-md-3">
                         <h4>Start <span class="semi-bold">Here</span></h4>
 
-                        <form method="POST" action="http://localhost:8000/">
+                        <form method="POST" >
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <button type="submit" value="start" name="start" class="btn btn-primary btn-cons"><span class="bold">Start Shift</span></button>
                         </form>
 
 
-                        <form method="POST" action="http://localhost:8000/end">
+                        <form method="POST" action="end">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <button type="submit" value="end" name="end" class="btn btn-danger btn-cons"><span class="bold">End Shift</span></button>
                         </form>
@@ -47,13 +47,14 @@
                     <div class="col-md-6">
 
                         <div class="row">
-                            <form method="POST" action="http://localhost:8000/break">
+                            <form method="POST" action="break">
 
                                 <div class="col-md-4">
                                     <h4>Break <span class="semi-bold">Hour</span></h4>
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" value="" style="width:300px" id="e12" tabindex="-1" class="select2-offscreen">
                                     <select name="breakH" style="width:100%">
+                                         <option value="-1">0</option>
                                         <option value="0">1</option>
                                         <option value="1">2</option>
                                         <option value="2">3</option>

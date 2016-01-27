@@ -337,6 +337,9 @@ class homeController extends Controller {
                 $breakH = 1;
             } elseif ($breakH === '1') {
                 $breakH = 2;
+                
+            }elseif($breakH === '-1'){
+               $breakH = 0; 
             } else {
                 $breakH = 3;
             }
