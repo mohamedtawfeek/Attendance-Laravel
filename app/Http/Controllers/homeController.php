@@ -230,11 +230,11 @@ class homeController extends Controller {
                 $Alert = 'alert-danger';
                 $todayDate = date('Y-m-d');
                 $date = $attend_date->attend_date;
-                if ($todayDate === $date && $ShiftEnd->first_start >= $attendH) {
+                if ($todayDate === $date || $ShiftEnd->first_start > $attendH) {
                     return homeController::index($sameMsg, $Alert);
                 } else {
                     $success = 'alert-success';
-                    $doneMsg = 'Saved Successfuly';
+                    $doneMsg = 'Saved Successfuly ';
                     attendCheck($request, $ShiftEnd);
                     return homeController::index($doneMsg, $success);
                 }
