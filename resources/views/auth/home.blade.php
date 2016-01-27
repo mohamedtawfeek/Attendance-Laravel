@@ -79,13 +79,13 @@
                     <div class="col-md-3">
                         <h4>Extra <span class="semi-bold">Here</span></h4>
 
-                        <form method="POST" action="http://localhost:8000/extra">
+                        <form method="POST" action="extra">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <button type="submit" value="extra" name="extra" class="btn btn-primary btn-cons"><span class="bold">Start Extra</span></button>
                         </form>
 
 
-                        <form method="POST" action="http://localhost:8000/extraEnd">
+                        <form method="POST" action="extraEnd">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <button type="submit" value="extraEnd" name="extraEnd" class="btn btn-danger btn-cons"><span class="bold">End Extra</span></button>
                         </form>

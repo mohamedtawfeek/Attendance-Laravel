@@ -30,7 +30,7 @@
                   
                 </div>
                 <div class="col-md-5 "> <br>
-                    <form id="login-form" class="login-form" action="/login" method="post">
+                    <form id="login-form" class="login-form" action="login" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                         <div class="row">
