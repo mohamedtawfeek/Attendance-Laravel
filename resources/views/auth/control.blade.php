@@ -33,9 +33,22 @@
 
     <div class="row">
         <div class="col-md-12">
+            @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            <div class="alert {{ $alert }}" role="alert">
+                <h4> {{ $msg }} </h4>
+            </div>
             <div class="grid simple">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Users</span></h4>
+                    <button class="btn btn-lg" data-toggle="modal" data-target="#userModal"> Add new user </button>
 
                     <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
                 </div>
@@ -45,17 +58,13 @@
                         <thead>
                             <tr class="gradeX"> 
                                 <th style="display: none">crf</th>
-
                                 <th style="display: none">id</th>
-
                                 <th>name</th>
                                 <th>shift id</th>
                                 <th>role</th>
                                 <th>email</th>
-                                <th>password</th>
-
+                                <th>new password</th>
                                 <th>Actions</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -67,7 +76,7 @@
                         <td>{{ $user->shift_id }}</td>
                         <td>{{ $user->role }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ $user->password }}</td>
+                        <td id="pass"></td>
                         <td class="actions">
                             <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
                             <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
@@ -84,6 +93,7 @@
             <div class="grid simple">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Shifts</span></h4>
+                    <button class="btn btn-lg" data-toggle="modal" data-target="#shiftModal"> Add new shift </button>
 
                     <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
                 </div>
@@ -106,7 +116,7 @@
                         <tbody>
                             @foreach($shifts as $shift)
                         <td style="display: none">{{ csrf_token() }}</td>
-                        <td>{{ $shift->id }}</td>
+                        <td class="actions">{{ $shift->id }}</td>
                         <td>{{ $shift->first_start }}</td>
                         <td>{{ $shift->first_end }}</td>
                         <td>{{ $shift->second_start }}</td>
@@ -144,7 +154,117 @@
                 </div>
 
             </section>
-        </div></div>
+        </div>
+        <div class="col-md-4">
+
+            <!-- Modal -->
+            <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <br>
+                            <i class="fa fa-users fa-7x"></i>
+                            <p class="no-margin">Add new user</p>
+                            <br>
+                        </div>
+                        <form id="form_iconic_validation" method="POST" action="addUser">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <div class="modal-body">
+
+                                <div class="row form-row">
+                                    <div class="col-md-6">
+                                        <input type="text" name="name" id="form1Name" class="form-control" placeholder="name">                                 
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" name="email" id="form1Email" class="form-control" placeholder="email">                                 
+                                    </div>
+                                </div>
+                                <div class="row form-row">
+                                    <div class="col-md-6">
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="password">                                 
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm password">                                 
+                                    </div>
+                                </div>
+                                <div class="row form-row">
+                                    <div class="col-md-12">
+                                        <div class="input-with-icon right">                                       
+                                            <i class=""></i>
+                                            <select name="shift" id="gendericonic" class="select2 form-control"  >
+                                                <option value="">Shift</option>
+                                                <option value="1">day</option>
+                                                <option value="2">night</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+        <div class="col-md-4">
+
+            <!-- Modal -->
+            <div class="modal fade" id="shiftModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <br>
+                            <i class="fa fa-users fa-7x"></i>
+                            <p class="no-margin">Add new Shift</p>
+                            <br>
+                        </div>
+                        <form id="form_iconic_validation" method="POST" action="addShift">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <div class="modal-body">
+
+                                <div class="row form-row">
+                                    <div class="col-md-6">
+                                        <input type="text" name="firstStart" id="firstStart" class="form-control" placeholder="first Start">                                 
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" name="firstEnd" id="firstEnd" class="form-control" placeholder="first end">                                 
+                                    </div>
+                                </div>
+                                <div class="row form-row">
+                                    <div class="col-md-6">
+                                        <input type="text" name="secondStart" id="secondStart" class="form-control" placeholder="secondStart">                                 
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" name="secondEnd" id="secondEnd" class="form-control" placeholder="second End">                                 
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
 </div>
 @endif
 @endsection
@@ -158,7 +278,8 @@
 
 <script src="assets/plugins/jquery-datatables-editable/jquery.dataTables.js"></script> 
 <script src="assets/plugins/jquery-datatables-editable/datatables.editable.init.js"></script>
-
+<script src="assets/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+<script src="assets/js/form_validations.js" type="text/javascript"></script>
 
 <!-- BEGIN CORE TEMPLATE JS -->
 @endsection

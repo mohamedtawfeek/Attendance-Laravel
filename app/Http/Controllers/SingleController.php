@@ -23,7 +23,7 @@ class SingleController extends Controller {
         $year = date('Y');
         $month = date('m');
         $attends = "";
-        return view('auth.single', compact('users', 'single','name','year','month','attends'));
+        return view('auth.single', compact('users', 'single', 'name', 'year', 'month', 'attends'));
     }
 
     /**
@@ -45,6 +45,17 @@ class SingleController extends Controller {
         } else {
             $month = $request->month;
         }
+
+        function minsCalc($hours, $mins) {
+            $aminCalc = $mins / 60;
+            $minSplit = explode(".", $aminCalc);
+            $HourPlus = $hours + $minSplit[0];
+            $originalNum = '.' . $minSplit[1];
+            $calCunum = $originalNum * 60;
+            $roundNum = round($calCunum);
+            return array($HourPlus, $roundNum);
+        }
+
         $year = $request->year;
         if ($request->check === "attend") {
             $attend = DB::table('attend')
@@ -87,7 +98,26 @@ class SingleController extends Controller {
                 }
             }
 
-            return view('auth.single', compact('users', 'attend', 'single','year','month','attends', 'name', 'workHours', 'minsCalc', 'lateHour', 'lateMins'));
+            $aminsCalc = $minsCalc / 60;
+            if ($aminsCalc > 0) {
+                $mins = minsCalc($workHours, $minsCalc);
+                $calcHourArc = $mins[0];
+                $calcMinArc = $mins[1];
+            } else {
+                $calcHourArc = $workHours;
+                $calcMinArc = $minsCalc;
+            }
+
+            $alateMins = $lateMins / 60;
+            if ($alateMins > 0) {
+                $calcLateArc = minsCalc($lateHour, $lateMins);
+                $calcLateH = $calcLateArc[0];
+                $calcLateM = $calcLateArc[1];
+            } else {
+                $calcLateH = $lateHour;
+                $calcLateM = $lateMins;
+            }
+            return view('auth.single', compact('users', 'attend', 'single', 'year', 'month', 'attends', 'name', 'calcHourArc', 'calcMinArc', 'calcLateH', 'calcLateM'));
         } else {
             $extras = DB::table('extra')
                     ->select()
@@ -111,13 +141,23 @@ class SingleController extends Controller {
                     }
                 }
             }
+            $aminsExtra = $minsExtra / 60;
+            if ($aminsExtra > 0) {
+                $calcExArc = minsCalc($extraHours, $minsExtra);
+                $calcExH = $calcExArc[0];
+                $calcExM = $calcExArc[1];
+            } else {
+                $calcExH = $extraHours;
+                $calcExM = $minsExtra;
+            }
+
             if ($extras) {
                 $single = "extra";
             } else {
                 $single = "what";
             }
 
-            return view('auth.single', compact('users', 'extras', 'single','year','month', 'name','extraHours','minsExtra','attends'));
+            return view('auth.single', compact('users', 'extras', 'single', 'year', 'month', 'name', 'calcExH', 'calcExM', 'attends'));
         }
     }
 

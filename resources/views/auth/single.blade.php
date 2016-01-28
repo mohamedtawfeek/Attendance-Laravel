@@ -4,7 +4,6 @@
 <!-- BEGIN PLUGIN CSS -->
 <link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen"/>
 <link href="assets/plugins/jquery-datatable/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
-<link href="assets/plugins/datatables-responsive/css/datatables.responsive.css" rel="stylesheet" type="text/css" media="screen"/>
 <link rel="stylesheet" href="assets/plugins/magnific-popup/magnific-popup.css" />
 
 <!-- END PLUGIN CSS -->
@@ -104,8 +103,8 @@
             <div class="grid simple">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Attendance - {{ $name }}</span></h4>
-                    <h4><span class="semi-bold">Hours: </span>{{ $workHours }} <span class="semi-bold">: </span>{{ $minsCalc }}</h4>
-                    <h4><span class="semi-bold">Late Hours: </span>{{ $lateHour }} <span class="semi-bold">: </span>{{ $lateMins }}</h4>
+                    <h4><span class="semi-bold">Hours: </span>{{ $calcHourArc }} <span class="semi-bold">: </span>{{ $calcMinArc }}</h4>
+                    <h4><span class="semi-bold">Late Hours: </span>{{ $calcLateH }} <span class="semi-bold">: </span>{{ $calcLateM }}</h4>
 
                     <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
                 </div>
@@ -160,7 +159,7 @@
             <div class="grid simple">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Extra - {{ $name }}</span></h4>
-                    <h4><span class="semi-bold">Hours: </span>{{ $extraHours }} <span class="semi-bold">: </span>{{ $minsExtra }}</h4>
+                    <h4><span class="semi-bold">Hours: </span>{{ $calcExH }} <span class="semi-bold">: </span>{{ $calcExM }}</h4>
 
                     <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
                 </div>

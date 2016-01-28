@@ -16,6 +16,8 @@ use attend\Http\Controllers\Auth\AuthController;
 Route::resource('/', 'homeController');
 Route::resource('/home', 'homeController');
 Route::post('/end', 'homeController@update');
+Route::post('/changePass', 'homeController@ChangePass');
+Route::get('/changePass', 'homeController@ChangePass');
 Route::post('/break', 'homeController@BreakTime');
 Route::get('/extra', 'extraController@index');
 Route::post('/extra', 'extraController@store');
@@ -27,6 +29,9 @@ Route::get('/showSingle', 'SingleController@index');
 Route::post('/showArchive', 'homeController@Archive');
 Route::get('/control', 'adminController@usersShow');
 Route::post('/control', 'adminController@userChange');
+Route::post('/addUser', 'adminController@addUser');
+Route::post('/addShift', 'adminController@addShift');
+
 Route::post('/userDelete', 'adminController@destroyUser');
 Route::post('/hoursDelete', 'adminController@destroyHours');
 Route::post('/hoursChange', 'adminController@hoursChange');

@@ -10,15 +10,16 @@
 @section('name', Auth::User()->name)
 @section('sidebar')
 <ul>
-       @if(Auth::User()->role === "admin")
+    <li> <a href="changePass"> <i class="fa fa-home"></i><span class="title">Change Password</span></a></li>
+    @if(Auth::User()->role === "admin")
     <li> <a href="javascript:;"> <i class="fa fa-folder-open"></i> <span class="title">Control</span> <span class="arrow "></span> </a>
-      
+
         <ul class="sub-menu">
             <li> <a href="admin"> Admin </a> </li>
             <li> <a href="single"> Single </a> </li>
             <li> <a href="control"> users </a> </li>
         </ul>
-       
+
     </li>@endif</ul>
 
 @endsection
@@ -33,7 +34,7 @@
                     <div class="col-md-3">
                         <h4>Start <span class="semi-bold">Here</span></h4>
 
-                        <form method="POST" >
+                        <form method="POST" action="home">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <button type="submit" value="start" name="start" class="btn btn-primary btn-cons"><span class="bold">Start Shift</span></button>
                         </form>
@@ -45,7 +46,7 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-
+                      
                         <div class="row">
                             <form method="POST" action="break">
 
@@ -54,18 +55,27 @@
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" value="" style="width:300px" id="e12" tabindex="-1" class="select2-offscreen">
                                     <select name="breakH" style="width:100%">
-                                         <option value="-1">0</option>
-                                        <option value="0">1</option>
-                                        <option value="1">2</option>
-                                        <option value="2">3</option>
+                                        @for($m = -1; $m <= 2; $m++)
+                                        
+                                        @if($m + 1 == $breakHour)
+                                        <option value="{{ $m }}" selected>{{ $m + 1 }}</option>
+                                        @else
+                                        <option value="{{ $m }}">{{ $m + 1 }}</option>
+                                        @endif
+                                        @endfor
                                     </select></div>
                                 <div class="col-md-4">
                                     <h4>Break <span class="semi-bold">Minute</span></h4>
 
                                     <input type="hidden" value="" style="width:300px" id="e12" tabindex="-1" class="select2-offscreen">
                                     <select name="breakM" id="remote" style="width:100%">
-                                        <option value="00">00</option>
+                                        @if($breakMin === "00")
+                                        <option value="00" selected="">00</option>
                                         <option value="30">30</option>
+                                        @else
+                                        <option value="00">00</option>
+                                        <option value="30" selected>30</option>
+                                        @endif
 
                                     </select>
                                 </div>
@@ -146,8 +156,8 @@
             <div class="grid simple ">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Attendance This month</span></h4>
-                    <h4><span class="semi-bold">Hours: </span>{{ $workHours }} <span class="semi-bold">: </span>{{ $minsCalc }}</h4>
-                    <h4><span class="semi-bold">Late Hours: </span>{{ $lateHour }} <span class="semi-bold">: </span>{{ $lateMins }}</h4>
+                    <h4><span class="semi-bold">Hours: </span>{{ $HourPlus }} <span class="semi-bold">: </span>{{ $roundNum }}</h4>
+                    <h4><span class="semi-bold">Late Hours: {{ $lateHourCalc }}</span> <span class="semi-bold">: {{ $lateMinsCalc }} </span></h4>
                     <h4></h4>
                     <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
                 </div>
@@ -161,7 +171,7 @@
                                 <th style="width:7%" >Attend</th>
                                 <th style="width:6%">Work Time</th>
                                 <th style="width:6%">Break Time</th>
-                                 <th style="width:6%">Late</th>
+                                <th style="width:6%">Late</th>
                                 <th style="width:10%">leave</th>
                             </tr>
                         </thead>
@@ -186,7 +196,7 @@
             <div class="grid simple ">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Extra</span></h4>
-                    <h4><span class="semi-bold">Hours: </span>{{ $extraHours }} <span class="semi-bold">: </span>{{ $minsExtra }}</h4>
+                    <h4><span class="semi-bold">Hours: </span>{{ $ExHourPlus }} <span class="semi-bold">: </span>{{ $roundRest }}</h4>
 
                     <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
                 </div>

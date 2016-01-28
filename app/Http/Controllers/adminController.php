@@ -82,7 +82,7 @@ class adminController extends Controller {
             $extra[$user->name . ' - Time: ' . $extraHours . ':' . $minsExtra] = $extraTime;
         }
 
-        return view('auth.admin', compact('attend', 'extra','users'));
+        return view('auth.admin', compact('attend', 'extra', 'users'));
     }
 
     /**
@@ -90,14 +90,15 @@ class adminController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function usersShow() {
+    public function usersShow($msg = "welcome", $alert = "alert-success") {
         $users = DB::table('users')
                 ->select()
                 ->get();
         $shifts = DB::table('hours')
                 ->select()
                 ->get();
-        return view('auth.control', compact('users', 'shifts'));
+
+        return view('auth.control', compact('users', 'shifts', 'msg', 'alert'));
     }
 
     /**
@@ -107,10 +108,11 @@ class adminController extends Controller {
      */
     public function userChange(Request $request) {
         if ($request->isMethod('post')) { {
+
                 $validator = Validator::make($request->all(), [
                             'name' => 'required|max:255',
                             'email' => 'required|email|max:255',
-                            'password' => 'required|min:6',
+                            'password' => 'min:6',
                             'shift' => 'required',
                 ]);
             }
@@ -119,14 +121,17 @@ class adminController extends Controller {
                                 ->withErrors($validator)
                                 ->withInput();
             }
-            if (Hash::needsRehash($request->password)) {
-                $password = Hash::make($request->password);
-            } else {
-                $password = $request->password;
+            $updateUser = array('name' => $request->name, 'shift_id' => $request->shift, 'role' => $request->role, 'email' => $request->email);
+
+            if (!empty($request->password)) {
+                if (Hash::needsRehash($request->password)) {
+                    $password = Hash::make($request->password);
+                    $updateUser['password'] = $password;
+                }
             }
             $update = DB::table('users')
                     ->where('id', $request->id)
-                    ->update(['name' => $request->name, 'shift_id' => $request->shift, 'role' => $request->role, 'email' => $request->email, 'password' => $password]);
+                    ->update($updateUser);
         }
     }
 
@@ -278,6 +283,61 @@ class adminController extends Controller {
                 ->select()
                 ->where('id', $id)
                 ->delete();
+    }
+
+    protected function addUser(Request $request) {
+        if ($request->isMethod('post')) {
+            $validator = Validator::make($request->all(), [
+                        'name' => 'required|max:255',
+                        'email' => 'required|email|max:255|unique:users',
+                        'password' => 'required|confirmed|min:6',
+                        'shift' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect('control')
+                                ->withErrors($validator)
+                                ->withInput();
+            }
+            $TimeStamps = date('Y-m-d H:i:s');
+
+            $addUser = array('name' => $request->name, 'shift_id' => $request->shift, 'role' => "user", 'email' => $request->email, 'password' => $request->password,'created_at' => $TimeStamps);
+            $User = DB::table('users')->insert($addUser);
+            if ($User) {
+                $msg = "Successfully added user";
+                $alert = "alert-success";
+            } else {
+                $msg = "There's some error";
+                $alert = "alert-danger";
+            }
+            return adminController::usersShow($msg, $alert);
+        }
+    }
+
+    protected function addShift(Request $request) {
+        if ($request->isMethod('post')) { {
+                $validator = Validator::make($request->all(), [
+                            'firstStart' => 'required|max:2',
+                            'firstEnd' => 'required|max:2',
+                            'secondStart' => 'required|max:2',
+                            'secondEnd' => 'required|max:2',
+                ]);
+            }
+            if ($validator->fails()) {
+                return redirect('control')
+                                ->withErrors($validator)
+                                ->withInput();
+            }
+            $addShift = DB::table('hours')
+                    ->insert(['first_start' => $request->firstStart, 'first_end' => $request->firstEnd, 'second_start' => $request->secondStart, 'second_end' => $request->secondEnd]);
+            if ($addShift) {
+                $msg = "Successfully added Shift";
+                $alert = "alert-success";
+            } else {
+                $msg = "There's some error";
+                $alert = "alert-danger";
+            }
+            return adminController::usersShow($msg, $alert);
+        }
     }
 
     /**

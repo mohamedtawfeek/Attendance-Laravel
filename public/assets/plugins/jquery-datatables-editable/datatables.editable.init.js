@@ -10,6 +10,7 @@
     'use strict';
 
     var EditableTable = {
+
         options: {
             addButton: '#addToTable',
             table: '.nameit',
@@ -688,6 +689,7 @@
             this.datatable.order([0, 'asc']).draw(); // always show fields
         },
         rowCancel: function ($row) {
+
             var _self = this,
                     $actions,
                     i,
@@ -709,6 +711,7 @@
             }
         },
         rowEdit: function ($row) {
+
             var _self = this,
                     data;
 
@@ -718,16 +721,21 @@
                 var $this = $(this);
 
                 if ($this.hasClass('actions')) {
+
                     _self.rowSetActionsEditing($row);
                 }
                 else if ($this.hasClass('actions')) {
+
                     _self.rowSetActionsEditing($row);
                 } else {
+
                     $this.html('<input type="text" class="form-control input-block" value="' + data[i] + '"/>');
+
                 }
             });
 
         }, rowSave: function ($row) {
+
             var _self = this,
                     $actions,
                     values = [];
@@ -772,7 +780,7 @@
                 beforeSend: function () {
                 }
             }).done(function (msg) {
-               alert('hello');
+
             });
         },
         rowRemove: function ($row) {
@@ -1045,7 +1053,7 @@
                 beforeSend: function () {
                 }
             }).done(function (msg) {
-                alert('hours');
+
             });
         },
         rowRemove: function ($row) {
@@ -1078,7 +1086,7 @@
 
             console.log(values);
             var request = $.ajax({
-                url: "/deleteExtra",
+                url: "/hoursDelete",
                 type: "POST",
                 data: {
                     _token: values[0],

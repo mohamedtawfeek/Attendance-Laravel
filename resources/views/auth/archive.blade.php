@@ -73,8 +73,8 @@
             <div class="grid simple">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Attendance - {{ Auth::User()->name }}</span></h4>
-                    <h4><span class="semi-bold">Hours: </span>{{ $workHours }} <span class="semi-bold">: </span>{{ $minsCalc }}</h4>
-                    <h4><span class="semi-bold">Late Hours: </span>{{ $lateHour }} <span class="semi-bold">: </span>{{ $lateMins }}</h4>
+                    <h4><span class="semi-bold">Hours: </span>{{ $calcHourArc }} <span class="semi-bold">: </span>{{ $calcMinArc }}</h4>
+                    <h4><span class="semi-bold">Late Hours: </span>{{ $calcLateH }} <span class="semi-bold">: </span>{{ $calcLateM }}</h4>
 
                     <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
                 </div>
@@ -109,7 +109,7 @@
             <div class="grid simple">
             <div class="grid-title">
                 <h4><span class="semi-bold">Extra - {{ Auth::User()->name }}</span></h4>
-                <h4><span class="semi-bold">Hours: </span>{{ $extraHours }} <span class="semi-bold">: </span>{{ $minsExtra }}</h4>
+                <h4><span class="semi-bold">Hours: </span>{{ $calcExH }} <span class="semi-bold">: </span>{{ $calcExM }}</h4>
 
                 <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
             </div>
