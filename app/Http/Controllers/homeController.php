@@ -273,10 +273,10 @@ class homeController extends Controller {
                     ->update(['password' => $password]);
             $msg = "changed password Successfuly";
             $alert = "alert-success";
-            return homeController::index($msg,$alert);
+            return homeController::index($msg, $alert);
         }
         if ($request->isMethod('get')) {
-            return view('auth.change'); 
+            return view('auth.change');
         }
     }
 
@@ -312,14 +312,15 @@ class homeController extends Controller {
                 $attendH--;
             }
 
-            $lateH = date('H') - $ShiftHours->first_start;
             if ($attendH >= $ShiftHours->first_start && date('i') >= 5) {
                 $lateM = $attendM;
             } else {
                 $lateM = 0;
             }
-            if($attendH < $ShiftHours->first_start){
-              $lateH = 0;  
+            if ($attendH < $ShiftHours->first_start) {
+                $lateH = 0;
+            } else {
+                $lateH = date('H') - $ShiftHours->first_start;
             }
 
             $attend_h = $attendH . ':' . $attendM;
