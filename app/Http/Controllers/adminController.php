@@ -205,13 +205,17 @@ class adminController extends Controller {
             } else {
                 $calcMin = $calcM;
             }
-            $lateHour = $attendH - $ShiftEnd->first_start;
+            if ($attendH < $ShiftEnd->first_start) {
+                $lateHour = 0;
+            } else {
+                $lateHour = $attendH - $ShiftEnd->first_start;
+            }
             $lateMin = $attendM;
-            
-            $response = array('id' => $request->id, 'attend' => $attend, 'leave' => $leave_time, 'workTime' => $calcH . ':' . $calcMin, 'break' => $breakTime,'late' => $lateHour.':'.$lateMin);
+
+            $response = array('id' => $request->id, 'attend' => $attend, 'leave' => $leave_time, 'workTime' => $calcH . ':' . $calcMin, 'break' => $breakTime, 'late' => $lateHour . ':' . $lateMin);
             $update = DB::table('attend')
                     ->where('id', $request->id)
-                    ->update(['attend_h' => $attend, 'leave_h' => $leave_time, 'calc_hour' => $calcH, 'calc_min' => $calcMin, 'break_h' => $breakTime,'late_h' => $lateHour.':'.$lateMin]);
+                    ->update(['attend_h' => $attend, 'leave_h' => $leave_time, 'calc_hour' => $calcH, 'calc_min' => $calcMin, 'break_h' => $breakTime, 'late_h' => $lateHour . ':' . $lateMin]);
             return response()->json(['response' => $response]);
         }
     }
@@ -303,7 +307,7 @@ class adminController extends Controller {
             }
             $TimeStamps = date('Y-m-d H:i:s');
 
-            $addUser = array('name' => $request->name, 'shift_id' => $request->shift, 'role' => "user", 'email' => $request->email, 'password' => $request->password,'created_at' => $TimeStamps);
+            $addUser = array('name' => $request->name, 'shift_id' => $request->shift, 'role' => "user", 'email' => $request->email, 'password' => $request->password, 'created_at' => $TimeStamps);
             $User = DB::table('users')->insert($addUser);
             if ($User) {
                 $msg = "Successfully added user";
