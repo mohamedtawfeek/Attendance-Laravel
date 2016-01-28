@@ -45,17 +45,8 @@ Route::post('/deleteExtra', 'adminController@destroyExtra');
 Route::get('login', 'Auth\AuthController@getLogin');
 Route::post('login', 'Auth\AuthController@postLogin');
 Route::get('logout', 'Auth\AuthController@getLogout');
-// Registration routes...
 
 
-Route::get('register', [
-    'middleware' => 'auth',
-    'uses' => 'Auth\AuthController@getRegister'
-]);
-Route::post('register',[
- 'middleware' => 'auth',
- 'uses' => 'Auth\AuthController@postRegister'
-]);
 
 
 Route::controllers([
