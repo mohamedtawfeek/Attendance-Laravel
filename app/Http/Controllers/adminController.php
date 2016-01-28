@@ -208,7 +208,7 @@ class adminController extends Controller {
             if ($attendH < $ShiftEnd->first_start) {
                 $lateHour = 0;
             } else {
-                $lateHour = $attendH - $ShiftEnd->first_start;
+                $lateHour = $attendH - $ShiftEnd->first_start; 
             }
             $lateMin = $attendM;
 
