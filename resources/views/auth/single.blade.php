@@ -122,6 +122,7 @@
                                 <th>Work Time</th>
                                 <th>Break Time</th>
                                 <th>leave</th>
+                                <th>Late</th>
                                 <th>Actions</th>
 
                             </tr>
@@ -141,6 +142,7 @@
                                 <td class="actions calc{{ $attendance->id }}">{{ $attendance->calc_hour }}:{{ $attendance->calc_min }}</td>
                                 <td class="break{{ $attendance->id }}">{{ $attendance->break_h }}</td>
                                 <td class="leave{{ $attendance->id }}">{{ $attendance->leave_h }}</td>
+                                <td class="actions late{{ $attendance->id }}">{{ $attendance->late_h }}</td>
                                 <td class="actions">
                                     <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
                                     <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>

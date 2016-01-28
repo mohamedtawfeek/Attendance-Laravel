@@ -205,10 +205,13 @@ class adminController extends Controller {
             } else {
                 $calcMin = $calcM;
             }
-            $response = array('id' => $request->id, 'attend' => $attend, 'leave' => $leave_time, 'workTime' => $calcH . ':' . $calcMin, 'break' => $breakTime);
+            $lateHour = $attendH - $ShiftEnd->first_start;
+            $lateMin = $attendM;
+            
+            $response = array('id' => $request->id, 'attend' => $attend, 'leave' => $leave_time, 'workTime' => $calcH . ':' . $calcMin, 'break' => $breakTime,'late' => $lateHour.':'.$lateMin);
             $update = DB::table('attend')
                     ->where('id', $request->id)
-                    ->update(['attend_h' => $attend, 'leave_h' => $leave_time, 'calc_hour' => $calcH, 'calc_min' => $calcMin, 'break_h' => $breakTime]);
+                    ->update(['attend_h' => $attend, 'leave_h' => $leave_time, 'calc_hour' => $calcH, 'calc_min' => $calcMin, 'break_h' => $breakTime,'late_h' => $lateHour.':'.$lateMin]);
             return response()->json(['response' => $response]);
         }
     }

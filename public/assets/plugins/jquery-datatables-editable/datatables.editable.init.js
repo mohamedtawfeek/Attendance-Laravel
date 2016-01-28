@@ -48,6 +48,7 @@
                     null,
                     null,
                     null,
+                    null,
                     {"bSortable": false}
                 ]
             });
@@ -227,6 +228,7 @@
                 }
             }).done(function (msg) {
                 $('.calc' + msg['response']['id']).html(msg['response']['workTime']);
+                $('.late' + msg['response']['id']).html(msg['response']['late']);
             });
         },
         rowRemove: function ($row) {
