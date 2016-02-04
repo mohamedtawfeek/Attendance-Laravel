@@ -28,6 +28,9 @@ class homeController extends Controller {
                     ->where('attend_date', 'like', $month . '%')
                     ->orderBy('attend_date', 'desc')
                     ->get();
+            if($attend) {
+                
+            
 
             function minsCalc($hours, $mins) {
                 $aminCalc = $mins / 60;
@@ -91,7 +94,7 @@ class homeController extends Controller {
                 $lateMinsCalc = $lateMins;
             }
 
-
+}
             $extra = DB::table('extra')
                     ->select()
                     ->where('user_id', Auth::User()->id)
@@ -312,15 +315,11 @@ class homeController extends Controller {
                 $attendH--;
             }
 
+            $lateH = date('H') - $ShiftHours->first_start;
             if ($attendH >= $ShiftHours->first_start && date('i') >= 5) {
                 $lateM = $attendM;
             } else {
                 $lateM = 0;
-            }
-            if ($attendH < $ShiftHours->first_start) {
-                $lateH = 0;
-            } else {
-                $lateH = date('H') - $ShiftHours->first_start;
             }
 
             $attend_h = $attendH . ':' . $attendM;

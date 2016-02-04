@@ -56,11 +56,12 @@
                                     <input type="hidden" value="" style="width:300px" id="e12" tabindex="-1" class="select2-offscreen">
                                     <select name="breakH" style="width:100%">
                                         @for($m = -1; $m <= 2; $m++)
-                                        
+                                       @if(isset($breakHour))
                                         @if($m + 1 == $breakHour)
                                         <option value="{{ $m }}" selected>{{ $m + 1 }}</option>
+                                        @endif
                                         @else
-                                        <option value="{{ $m }}">{{ $m + 1 }}</option>
+                                        <option value="{{ $m }}">{{ $m + 1 }}</option> }}
                                         @endif
                                         @endfor
                                     </select></div>
@@ -69,9 +70,11 @@
 
                                     <input type="hidden" value="" style="width:300px" id="e12" tabindex="-1" class="select2-offscreen">
                                     <select name="breakM" id="remote" style="width:100%">
+                                        @if(isset($breakMin))
                                         @if($breakMin === "00")
                                         <option value="00" selected="">00</option>
                                         <option value="30">30</option>
+                                        @endif
                                         @else
                                         <option value="00">00</option>
                                         <option value="30" selected>30</option>
@@ -153,6 +156,7 @@
                     </div>
                 </form>
             </div>
+            @if(isset($HourPlus))
             <div class="grid simple ">
                 <div class="grid-title">
                     <h4><span class="semi-bold">Attendance This month</span></h4>
@@ -190,6 +194,7 @@
                     </table>
                 </div>
             </div>
+            @endif
         </div>
         <div class="span12">
 
