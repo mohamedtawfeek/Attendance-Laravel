@@ -59,9 +59,9 @@
                                        @if(isset($breakHour))
                                         @if($m + 1 == $breakHour)
                                         <option value="{{ $m }}" selected>{{ $m + 1 }}</option>
-                                        @endif
                                         @else
-                                        <option value="{{ $m }}">{{ $m + 1 }}</option> }}
+                                        <option value="{{ $m }}" >{{ $m + 1 }}</option> 
+                                        @endif
                                         @endif
                                         @endfor
                                     </select></div>
@@ -74,12 +74,12 @@
                                         @if($breakMin === "00")
                                         <option value="00" selected="">00</option>
                                         <option value="30">30</option>
-                                        @endif
+                                        
                                         @else
                                         <option value="00">00</option>
                                         <option value="30" selected>30</option>
                                         @endif
-
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="col-md-4" style="padding-top: -3px;">
