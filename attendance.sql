@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 28, 2016 at 02:52 PM
+-- Generation Time: Feb 29, 2016 at 03:18 PM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -33,19 +33,20 @@ CREATE TABLE IF NOT EXISTS `attend` (
   `shift_id` int(11) NOT NULL,
   `attend_date` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `attend_h` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
-  `calc_hour` int(11) NOT NULL,
-  `calc_min` int(11) NOT NULL,
+  `calc_hour` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
+  `calc_min` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
   `leave_h` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
   `late_h` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `break_h` varchar(11) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=95 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=108 ;
 
 --
 -- Dumping data for table `attend`
 --
 
 INSERT INTO `attend` (`id`, `day`, `user_id`, `shift_id`, `attend_date`, `attend_h`, `calc_hour`, `calc_min`, `leave_h`, `late_h`, `break_h`) VALUES
-(59, 'Sunday', 1, 1, '2016-01-24', '12:35', 5, 33, '19:00', '1:10', '1:25');
+(96, 'Thursday', 1, 1, '2016-02-04', '14:52', '6', '8', '19:00', '4:52', '1:00'),
+(107, 'Monday', 1, 1, '2016-02-29', '16:11', '01', '19', '19:00', '06:11', '01:30');
 
 -- --------------------------------------------------------
 
@@ -84,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `hours` (
   `first_end` int(11) NOT NULL,
   `second_start` int(11) NOT NULL,
   `second_end` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `hours`
@@ -145,14 +146,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `shift_id`, `name`, `role`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 1, 'mohamed', 'admin', 'mohameds.tawfeek@gmail.com', '$2y$10$t7URoY0qnteNOJ19ZtqRSO/7AFCMvHhdch.KTox/z5xSzWbi0TQW.', 'VRzCJVhWuNIv06jSgtbLdxSskjEQw8LuR3I0eKK9FM5VSrJUpoTWTUQaOBif', '2015-12-03 15:58:02', '2016-01-27 14:03:01'),
+(1, 1, 'mohamed', 'admin', 'mohameds.tawfeek@gmail.com', '$2y$10$am5nG.ftkKFtTCFeDk6Uru4FfiEoi5gZ7Nt/O62ZYLUZ97nMCB382', 'D4AptxmpriFuk2i4id0o1zzAWwygnsGeTb2bNKuiqCBtXY23xuV9Nwpr10QY', '2015-12-03 15:58:02', '2016-01-28 14:48:42'),
 (2, 2, 'Mohamed Sayed', '', 'genka5@gmail.com', '$2y$10$am5nG.ftkKFtTCFeDk6Uru4FfiEoi5gZ7Nt/O62ZYLUZ97nMCB382', 'Q5wsTSHrqiDZYebcXuYisSHnnbzuZ0V2Eyg39cwiwhJpBrGZiEznDVcSV3bD', '2016-01-26 09:21:20', '2016-01-26 13:06:13');
 
 --
@@ -197,7 +198,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `attend`
 --
 ALTER TABLE `attend`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=95;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=108;
 --
 -- AUTO_INCREMENT for table `extra`
 --
@@ -207,12 +208,12 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 -- AUTO_INCREMENT for table `hours`
 --
 ALTER TABLE `hours`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
