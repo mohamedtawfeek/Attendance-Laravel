@@ -323,7 +323,7 @@ class homeController extends Controller {
             }
 
             $attend_h = $attendH . ':' . $attendM;
-            $calc_h = ($ShiftHours->second_end - $ShiftHours->first_start) + ($ShiftHours->second_start - $ShiftHours->first_end) - 1 - 1;
+            $calc_h = ($ShiftHours->second_end - $ShiftHours->first_start) + ($ShiftHours->second_start - $ShiftHours->first_end) - 1 - $lateH;
             $calcM = 60 - $attendM;
             if ($calcM < 0) {
                 $calc_h --;
