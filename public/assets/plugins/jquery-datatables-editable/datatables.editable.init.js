@@ -10,7 +10,6 @@
     'use strict';
 
     var EditableTable = {
-
         options: {
             addButton: '#addToTable',
             table: '.nameit',
@@ -874,6 +873,7 @@
                     null,
                     null,
                     null,
+                    null,
                     {"bSortable": false},
                     {"bSortable": false}
                 ]
@@ -1047,10 +1047,11 @@
                 data: {
                     _token: values[0],
                     id: values[1],
-                    first: values[2],
-                    firstEnd: values[3],
-                    second: values[4],
-                    secondEnd: values[5]
+                    name: values[2],
+                    first: values[3],
+                    firstEnd: values[4],
+                    second: values[5],
+                    secondEnd: values[6]
                 },
                 beforeSend: function () {
                 }

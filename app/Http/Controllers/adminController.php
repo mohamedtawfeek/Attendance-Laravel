@@ -138,6 +138,7 @@ class adminController extends Controller {
     public function hoursChange(Request $request) {
         if ($request->isMethod('post')) { {
                 $validator = Validator::make($request->all(), [
+                            'name' => 'required|max:50',
                             'first' => 'required|max:2',
                             'firstEnd' => 'required|max:2',
                             'second' => 'required|max:2',
@@ -151,7 +152,7 @@ class adminController extends Controller {
             }
             $update = DB::table('hours')
                     ->where('id', $request->id)
-                    ->update(['first_start' => $request->first, 'first_end' => $request->firstEnd, 'second_start' => $request->second, 'second_end' => $request->secondEnd]);
+                    ->update(['name' => $request->name,'first_start' => $request->first, 'first_end' => $request->firstEnd, 'second_start' => $request->second, 'second_end' => $request->secondEnd]);
         }
     }
 
@@ -205,11 +206,7 @@ class adminController extends Controller {
             } else {
                 $calcMin = $calcM;
             }
-            if ($attendH < $ShiftEnd->first_start) {
-                $lateHour = 0;
-            } else {
-                $lateHour = $attendH - $ShiftEnd->first_start; 
-            }
+            $lateHour = $attendH - $ShiftEnd->first_start;
             $lateMin = $attendM;
 
             $response = array('id' => $request->id, 'attend' => $attend, 'leave' => $leave_time, 'workTime' => $calcH . ':' . $calcMin, 'break' => $breakTime, 'late' => $lateHour . ':' . $lateMin);
@@ -323,6 +320,7 @@ class adminController extends Controller {
     protected function addShift(Request $request) {
         if ($request->isMethod('post')) { {
                 $validator = Validator::make($request->all(), [
+                            'ShiftName' => 'required|max:50',
                             'firstStart' => 'required|max:2',
                             'firstEnd' => 'required|max:2',
                             'secondStart' => 'required|max:2',
@@ -335,7 +333,7 @@ class adminController extends Controller {
                                 ->withInput();
             }
             $addShift = DB::table('hours')
-                    ->insert(['first_start' => $request->firstStart, 'first_end' => $request->firstEnd, 'second_start' => $request->secondStart, 'second_end' => $request->secondEnd]);
+                    ->insert(['first_start' => $request->firstStart, 'name' => $request->ShiftName, 'first_end' => $request->firstEnd, 'second_start' => $request->secondStart, 'second_end' => $request->secondEnd]);
             if ($addShift) {
                 $msg = "Successfully added Shift";
                 $alert = "alert-success";

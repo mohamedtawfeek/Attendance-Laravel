@@ -4,7 +4,6 @@
 <!-- BEGIN PLUGIN CSS -->
 <link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen"/>
 <link href="assets/plugins/jquery-datatable/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
-<link href="assets/plugins/datatables-responsive/css/datatables.responsive.css" rel="stylesheet" type="text/css" media="screen"/>
 <link rel="stylesheet" href="assets/plugins/magnific-popup/magnific-popup.css" />
 
 <!-- END PLUGIN CSS -->
@@ -13,13 +12,13 @@
 @section('sidebar')
 @if(Auth::User()->role === "admin")
 <ul>
-    <li class="start"> <a href="home" target="_blank"> <i class="icon-custom-home"></i> <span class="title">Home</span> <span class="selected"></span> </a> 
+    <li class="start"> <a href="home" > <i class="icon-custom-home"></i> <span class="title">Home</span> <span class="selected"></span> </a> 
 
     </li>
     <li class="active"> <a href="javascript:;"> <i class="fa fa-folder-open"></i> <span class="title">Control</span> <span class="arrow "></span> </a>
         <ul class="sub-menu">
             <li> <a href="admin"> Admin </a> </li>
-            <li> <a href="single"> Single </a> </li>
+            <li> <a href="single"> Search </a> </li>
 
             <li class="active"> <a href="javascript:;"> users </a> </li>
 
@@ -103,12 +102,13 @@
                         <thead>
                             <tr class="gradeX"> 
                                 <th style="display: none">crf</th>
+                                <th style="display: none">id</th>
 
-                                <th>Shift Number</th>
-                                <th>First part</th>
-                                <th>End First</th>
-                                <th>Second part</th>
-                                <th>End Second</th>
+                                <th>Shift name</th>
+                                <th>1st Start</th>
+                                <th>1st End</th>
+                                <th>2nd Start</th>
+                                <th>2nd End</th>
                                 <th>Actions</th>
 
                             </tr>
@@ -116,7 +116,9 @@
                         <tbody>
                             @foreach($shifts as $shift)
                         <td style="display: none">{{ csrf_token() }}</td>
-                        <td class="actions">{{ $shift->id }}</td>
+                        <td style="display: none">{{ $shift->id }}</td>
+
+                        <td>{{ $shift->name }}</td>
                         <td>{{ $shift->first_start }}</td>
                         <td>{{ $shift->first_end }}</td>
                         <td>{{ $shift->second_start }}</td>
@@ -193,9 +195,9 @@
                                         <div class="input-with-icon right">                                       
                                             <i class=""></i>
                                             <select name="shift" id="gendericonic" class="select2 form-control"  >
-                                                <option value="">Shift</option>
-                                                <option value="1">day</option>
-                                                <option value="2">night</option>
+                                                @foreach($shifts as $shift)
+                                                <option value="{{ $shift->id }}">{{ $shift->name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -232,7 +234,11 @@
                         <form id="form_iconic_validation" method="POST" action="addShift">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <div class="modal-body">
-
+                                <div class="row form-row">
+                                    <div class="col-md-12">
+                                        <input type="text" name="ShiftName" id="ShiftName" class="form-control" placeholder="Shift name">                                 
+                                    </div>
+                                </div>
                                 <div class="row form-row">
                                     <div class="col-md-6">
                                         <input type="text" name="firstStart" id="firstStart" class="form-control" placeholder="first Start">                                 

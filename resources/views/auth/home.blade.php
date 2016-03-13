@@ -16,7 +16,7 @@
 
         <ul class="sub-menu">
             <li> <a href="admin"> Admin </a> </li>
-            <li> <a href="single"> Single </a> </li>
+            <li> <a href="single"> Search </a> </li>
             <li> <a href="control"> users </a> </li>
         </ul>
 
@@ -55,31 +55,15 @@
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" value="" style="width:300px" id="e12" tabindex="-1" class="select2-offscreen">
                                     <select name="breakH" style="width:100%">
-                                        @for($m = -1; $m <= 2; $m++)
-                                       @if(isset($breakHour))
-                                        @if($m + 1 == $breakHour)
-                                        <option value="{{ $m }}" selected>{{ $m + 1 }}</option>
-                                        @else
-                                        <option value="{{ $m }}" >{{ $m + 1 }}</option> 
-                                        @endif
-                                        @endif
-                                        @endfor
+                                        <option value="0" selected>1</option>
+                                        <option value="1">2</option>
                                     </select></div>
-                                <div class="col-md-4">
+                                <div class="col-md-4" style="display:none;">
                                     <h4>Break <span class="semi-bold">Minute</span></h4>
 
                                     <input type="hidden" value="" style="width:300px" id="e12" tabindex="-1" class="select2-offscreen">
-                                    <select name="breakM" id="remote" style="width:100%">
-                                        @if(isset($breakMin))
-                                        @if($breakMin === "00")
+                                    <select name="breakM" id="remote" style="width:100%; ">
                                         <option value="00" selected="">00</option>
-                                        <option value="30">30</option>
-                                        
-                                        @else
-                                        <option value="00">00</option>
-                                        <option value="30" selected>30</option>
-                                        @endif
-                                        @endif
                                     </select>
                                 </div>
                                 <div class="col-md-4" style="padding-top: -3px;">

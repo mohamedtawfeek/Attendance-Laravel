@@ -35,6 +35,12 @@ use AuthenticatesAndRegistersUsers,
         
     }
 
+    public function formatInput() {
+        $input = array_map('trim', $this->all());
+        $this->replace($input);
+        return $this->all();
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *

@@ -314,25 +314,11 @@ class homeController extends Controller {
                 $attendH--;
             }
 
-            $lateH = date('H') - $ShiftHours->first_start;
-            if ($attendH >= $ShiftHours->first_start && date('i') >= 5) {
-                $lateM = $attendM;
-            } else {
-                $lateM = '00';
-            }
-            
-            if($lateH < 10){
-              $lateH = '0'.$lateH;  
-            }else{
-                $lateH = $lateH;
-            }
-            
-            if($lateM < 10 ){
-                $lateM = '0'.$lateM;
-            }else{
-                $lateM = $lateM;
-            }
-            
+
+
+
+
+
             if ($attendH < 10) {
                 $attendH = '0' . $attendH;
             } else {
@@ -343,22 +329,31 @@ class homeController extends Controller {
             } else {
                 $attendM = $attendM;
             }
+            if ($attendH <= $ShiftHours->first_start - 1) {
+                $lateH = '00';
+            } else {
+                $lateH = $attendH - $ShiftHours->first_start;
+            }
+            if ($attendH >= $ShiftHours->first_start - 1 && date('i') >= 5) {
+                $lateM = 60 - $attendM;
+            } else {
+                $lateM = '00';
+            }
+
             $attend_h = $attendH . ':' . $attendM;
             $calc_h = ($ShiftHours->second_end - $ShiftHours->first_start) + ($ShiftHours->second_start - $ShiftHours->first_end) - 1 - $lateH;
             $calcM = 60 - $attendM;
             if ($calcM < 0) {
-                $calc_h --;
+                $calc_h--;
                 $minOutput = 60 . $calcM;
             } elseif ($calcM < 10) {
                 $minOutput = '0' . $calcM;
             } else {
                 $minOutput = $calcM;
             }
-            if ($minOutput < 10) {
-                $calc_m = '0' . $minOutput;
-            } else {
-                $calc_m = $minOutput;
-            }
+
+            $calc_m = $minOutput;
+
             if ($calc_h < 10) {
                 $calc_h = '0' . $calc_h;
             } else {
@@ -377,7 +372,7 @@ class homeController extends Controller {
         }
 
         if ($day !== "Friday" && $day !== "Saturday") {
-            if ($attend_date || $ShiftEnd->first_start > $attendH) {
+            if ($attend_date || $ShiftEnd->first_start - 1 > $attendH) {
                 $sameMsg = 'you cannot start shift more than one time';
                 $Alert = 'alert-danger';
                 $todayDate = date('Y-m-d');
@@ -391,7 +386,7 @@ class homeController extends Controller {
                     attendCheck($request, $ShiftEnd);
                     return homeController::index($doneMsg, $success);
                 }
-            } elseif ($ShiftEnd->first_start > $attendH) {
+            } elseif ($ShiftEnd->first_start - 1 > $attendH) {
                 $sameMsg = 'you cannot start shift at this time';
                 $Alert = 'alert-danger';
                 return homeController::index($sameMsg, $Alert);
@@ -479,7 +474,7 @@ class homeController extends Controller {
 
     public function BreakTime(Request $request) {
         $break = DB::table('attend')
-                ->select('break_h', 'calc_hour', 'calc_min')
+                ->select('break_h', 'calc_hour', 'calc_min', 'leave_h')
                 ->where('user_id', Auth::User()->id)
                 ->orderBy('attend_date', 'desc')
                 ->first();
@@ -490,7 +485,7 @@ class homeController extends Controller {
             $calcMin = $break->calc_min;
             $breakHour = $break->break_h;
             $todayDate = date('Y-m-d');
-
+            $LeaveHour = $break->leave_h;
             $calcH = $calcHour - $breakH;
             if ($calcMin >= $breakM) {
                 $calcM = $calcMin - $breakM;
@@ -498,11 +493,7 @@ class homeController extends Controller {
                 $calcM = 60 - $breakM + $calcMin;
                 $calcH--;
             }
-            if($breakM < 10){
-               $breakM = '0'.$breakM; 
-            }else{
-                $breakM = $breakM;
-            }
+
             if ($calcH < 10) {
                 $calcH = '0' . $calcH;
             } else {
@@ -517,18 +508,17 @@ class homeController extends Controller {
 
             if ($breakH === '0') {
                 $breakH = '01';
+                $BreakLeave = $LeaveHour;
             } elseif ($breakH === '1') {
                 $breakH = '02';
-            } elseif ($breakH === '-1') {
-                $breakH = '0';
-            } else {
-                $breakH = '03';
+                $breakLeave = $LeaveHour + 1;
+                $calcH++;
             }
             if ($breakHour === '1:00') {
                 $update = DB::table('attend')
                         ->where('user_id', Auth::User()->id)
                         ->where('attend_date', $todayDate)
-                        ->update(['break_h' => $breakH . ':' . $breakM, 'calc_hour' => $calcH, 'calc_min' => $calcM]);
+                        ->update(['break_h' => $breakH . ':' . $breakM, 'calc_hour' => $calcH, 'calc_min' => $calcM, 'leave_h' => $breakLeave]);
                 $doneMsg = 'Done Successfully';
                 $success = 'alert-success';
                 return homeController::index($doneMsg, $success);

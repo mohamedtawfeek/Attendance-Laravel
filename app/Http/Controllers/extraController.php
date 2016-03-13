@@ -37,7 +37,7 @@ class extraController extends Controller {
                 ->first();
 
         function extraCheck($request) {
-            $todayDate = date('Y-m-d');
+            $todayDate = date('d-m-Y');
             $day = date('l');
             $status = 'pending';
             $extraH = date('H');
@@ -58,26 +58,28 @@ class extraController extends Controller {
                 ->select()
                 ->where('id', Auth::User()->shift_id)
                 ->get();
-        $shift_end = $ShiftHours[0]->second_end + 1;
+        $shift_end = $ShiftHours[0]->second_end;
         $extraH = date('H');
         $day = date('l');
+        $todayDate = date('d-m-Y');
+
         if ($day !== "Friday" && $day !== "Saturday") {
             if ($extra_date && $shift_end < $extraH) {
                 $sameMsg = 'you cannot start extra more than one time';
                 $Alert = 'alert-danger';
-                $todayDate = date('Y-m-d');
+                $todayDate = date('d-m-Y');
                 $date = $extra_date->extra_date;
                 if ($todayDate === $date) {
                     return homeController::index($sameMsg, $Alert);
                 } else {
                     $success = 'alert-success';
-                    $doneMsg = 'Saved Successfully';
+                    $doneMsg = 'Saved Successfully waiting for acceptance';
                     extraCheck($request);
                     return homeController::index($doneMsg, $success);
                 }
             } elseif ($shift_end < $extraH) {
                 $success = 'alert-success';
-                $doneMsg = 'Saved Successfully';
+                $doneMsg = 'Saved Successfully waiting for acceptance';
                 extraCheck($request);
                 return homeController::index($doneMsg, $success);
             } else {
@@ -87,7 +89,7 @@ class extraController extends Controller {
             }
         } else {
             $success = 'alert-success';
-            $doneMsg = 'Saved Successfully';
+            $doneMsg = 'Saved Successfully waiting for acceptance 3';
             extraCheck($request);
             return homeController::index($doneMsg, $success);
         }
@@ -112,7 +114,7 @@ class extraController extends Controller {
         $extraH = $attendSplit[0];
         $extraM = $attendSplit[1];
 
-        $todayDate = date('Y-m-d');
+        $todayDate = date('d-m-Y');
         $leave_h = date('H:i');
         $end = $request->extraEnd;
         $calcH = date('H') - $extraH;
@@ -126,6 +128,16 @@ class extraController extends Controller {
             } else {
                 $calcM = $Mcalc - date('i');
             }
+        }
+        if ($calcH < 10) {
+            $calcH = '0' . $calcH;
+        } else {
+            $calcH = $calcH;
+        }
+        if ($calcM < 10) {
+            $calcM = '0' . $calcM;
+        } else {
+            $calcM = $calcM;
         }
         if ($end === 'extraEnd' && $leave_time === '00:00') {
             $update = DB::table('extra')

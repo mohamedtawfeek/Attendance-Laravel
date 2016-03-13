@@ -12,7 +12,7 @@
 @section('content')
 <div class="grid simple">
     <div class="grid-title no-border">
-        <h4><span class="semi-bold">Change Password</span></h4>
+        <h4><span class="semi-bold">Change Password - {{ Auth::User()->name }}</span></h4>
         @if($errors->any())
         <div class="alert alert-danger">
             <h4>there's Some errors</h4>

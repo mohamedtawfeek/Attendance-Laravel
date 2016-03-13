@@ -11,13 +11,13 @@
 @section('name', Auth::User()->name)
 @section('sidebar')
 <ul>
-    <li class="start"> <a href="home" target="_blank"> <i class="icon-custom-home"></i> <span class="title">Home</span> <span class="selected"></span> </a> 
+    <li class="start"> <a href="home" > <i class="icon-custom-home"></i> <span class="title">Home</span> <span class="selected"></span> </a> 
 
     </li>
     <li class="active"> <a href="javascript:;"> <i class="fa fa-folder-open"></i> <span class="title">Control</span> <span class="arrow "></span> </a>
         <ul class="sub-menu">
             <li> <a href="admin"> Admin </a> </li>
-            <li class="active"> <a href="javascript:;"> Single </a> </li>
+            <li class="active"> <a href="javascript:;"> Search </a> </li>
             <li> <a href="control"> users </a> </li>
 
         </ul>
