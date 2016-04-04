@@ -9,14 +9,10 @@ $.extend(true, $.fn.dataTable.defaults, {
         "sLengthMenu": "_MENU_"
     }
 });
-
-
 /* Default class modification */
 $.extend($.fn.dataTableExt.oStdClasses, {
     "sWrapper": "dataTables_wrapper form-inline"
 });
-
-
 /* API method to get paging information */
 $.fn.dataTableExt.oApi.fnPagingInfo = function (oSettings)
 {
@@ -32,9 +28,6 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function (oSettings)
                 0 : Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
     };
 };
-
-
-
 /* Bootstrap style pagination control */
 $.extend($.fn.dataTableExt.oPagination, {
     "bootstrap": {
@@ -46,7 +39,6 @@ $.extend($.fn.dataTableExt.oPagination, {
                     fnDraw(oSettings);
                 }
             };
-
             $(nPaging).addClass('pagination').append(
                     '<ul>' +
                     '<li class="prev disabled"><a href="#"><i class="fa fa-chevron-left"></i></a></li>' +
@@ -62,7 +54,6 @@ $.extend($.fn.dataTableExt.oPagination, {
             var oPaging = oSettings.oInstance.fnPagingInfo();
             var an = oSettings.aanFeatures.p;
             var i, ien, j, sClass, iStart, iEnd, iHalf = Math.floor(iListLength / 2);
-
             if (oPaging.iTotalPages < iListLength) {
                 iStart = 1;
                 iEnd = oPaging.iTotalPages;
@@ -81,7 +72,6 @@ $.extend($.fn.dataTableExt.oPagination, {
             for (i = 0, ien = an.length; i < ien; i++) {
                 // Remove the middle elements
                 $('li:gt(0)', an[i]).filter(':not(:last)').remove();
-
                 // Add the new list items and their event handlers
                 for (j = iStart; j <= iEnd; j++) {
                     sClass = (j == oPaging.iPage + 1) ? 'class="active"' : '';
@@ -110,8 +100,6 @@ $.extend($.fn.dataTableExt.oPagination, {
         }
     }
 });
-
-
 /*
  * TableTools Bootstrap compatibility
  * Required TableTools 2.1+
@@ -123,22 +111,8 @@ $.extend(true, $.fn.DataTable.TableTools.classes, {
     "buttons": {
         "normal": "btn btn-white",
         "disabled": "disabled"
-    },
-    "collection": {
-        "container": "DTTT_dropdown dropdown-menu",
-        "buttons": {
-            "normal": "",
-            "disabled": "disabled"
-        }
-    },
-    "print": {
-        "info": "DTTT_print_info modal"
-    },
-    "select": {
-        "row": "active"
     }
 });
-
 // Have the collection use a bootstrap compatible dropdown
 $.extend(true, $.fn.DataTable.TableTools.DEFAULTS.oTags, {
     "collection": {
@@ -147,25 +121,13 @@ $.extend(true, $.fn.DataTable.TableTools.DEFAULTS.oTags, {
         "liner": "a"
     }
 });
-
 $(".select2-wrapper").select2({minimumResultsForSearch: -1});
-
 /* Table initialisation */
 $(document).ready(function () {
 
     var tableElement = $('#example');
-    tableElement.dataTable({
-        "sDom": "<'row'<'col-md-6'l T><'col-md-6'f>r>t<'row'<'col-md-12'p i>>",
-        "oTableTools": {
-            "aButtons": [
-                {
-                    "sExtends": "collection",
-                    "sButtonText": "<i class='fa fa-cloud-download'></i>",
-                    "aButtons": ["csv", "xls", "pdf", "copy"]
-                }
-            ]
-        }
-    });
+    tableElement.dataTable();
+
     var tableElement2 = $('#example2');
     tableElement2.dataTable();
 });

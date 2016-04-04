@@ -80,6 +80,7 @@
                 </div>
 
                 <div class="grid-body">
+                     <a href='javascript:;' onClick ="$('#example').tableExport({type: 'excel', escape: 'false'});"><i class='fa fa-file-excel-o' style='font-size: 24px;'></i> </a>
                     <table class="table table-hover table-condensed" id="example">
                         <thead>
                             <tr>
@@ -115,6 +116,7 @@
             </div>
 
             <div class="grid-body ">
+                 <a href='javascript:;' onClick ="$('#example2').tableExport({type: 'excel', escape: 'false'});"><i class='fa fa-file-excel-o' style='font-size: 24px;'></i> </a>
                 <table class="table table-hover table-condensed" id="example2">
                     <thead>
                         <tr>

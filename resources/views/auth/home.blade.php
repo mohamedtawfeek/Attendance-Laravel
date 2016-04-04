@@ -46,7 +46,7 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-                      
+
                         <div class="row">
                             <form method="POST" action="break">
 
@@ -143,15 +143,17 @@
             @if(isset($HourPlus))
             <div class="grid simple ">
                 <div class="grid-title">
-                    <h4><span class="semi-bold">Attendance This month</span></h4>
+                    <h4> <span class="semi-bold"> Attendance This month   </span></h4>
                     <h4><span class="semi-bold">Hours: </span>{{ $HourPlus }} <span class="semi-bold">: </span>{{ $roundNum }}</h4>
                     <h4><span class="semi-bold">Late Hours: {{ $lateHourCalc }}</span> <span class="semi-bold">: {{ $lateMinsCalc }} </span></h4>
-                    <h4></h4>
+
                     <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="javascript:;" class="remove"></a> </div>
+
                 </div>
 
 
                 <div class="grid-body ">
+                     <a href='javascript:;' onClick ="$('#example').tableExport({type: 'excel', escape: 'false'});"><i class='fa fa-file-excel-o' style='font-size: 24px;'></i> </a>
                     <table class="table table-hover table-condensed" id="example">
                         <thead>
                             <tr>
@@ -191,6 +193,7 @@
                 </div>
 
                 <div class="grid-body ">
+                     <a href='javascript:;' onClick ="$('#example2').tableExport({type: 'excel', escape: 'false'});"><i class='fa fa-file-excel-o' style='font-size: 24px;'></i> </a>
                     <table class="table table-hover table-condensed" id="example2">
                         <thead>
                             <tr>
@@ -226,6 +229,12 @@
     <script src="assets/plugins/jquery-datatable/extra/js/dataTables.tableTools.min.js" type="text/javascript" ></script>
     <script type="text/javascript" src="assets/plugins/datatables-responsive/js/datatables.responsive.js"></script>
     <script type="text/javascript" src="assets/plugins/datatables-responsive/js/lodash.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/tableexport/tableExport.js"></script>
+    <script type="text/javascript" src="assets/plugins/tableexport/jquery.base64.js"></script>
+    <script type="text/javascript" src="assets/plugins/tableexport/html2canvas.js"></script>
+    <script type="text/javascript" src="assets/plugins/tableexport/jspdf/libs/sprintf.js"></script>
+    <script type="text/javascript" src="assets/plugins/tableexport/jspdf/jspdf.js"></script>
+    <script type="text/javascript" src="assets/plugins/tableexport/jspdf/libs/base64.js"></script>     
     <!-- END PAGE LEVEL PLUGINS -->
     <script src="assets/js/datatables.js" type="text/javascript"></script>
     <script src="assets/js/demo.js" type="text/javascript"></script>
